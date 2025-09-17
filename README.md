@@ -36,19 +36,16 @@ To design and simulate a 4:1 Multiplexer (MUX) using Verilog HDL in four differe
 ### 4:1 MUX Gate-Level Implementation
 ```verilog
 // Gate Level Modelling - Skeleton
-module mux4_gate (
-    input  wire I0, I1, I2, I3,
-    input  wire S0, S1,
-    output wire Y
-);
-    // Declare internal wires
-
-    // Write NOT gates
-
-    // Write AND gates
-
-    // Write OR gate
-
+module mux_41(I,S,Y);
+input [3:0]I;
+input[1:0]S;
+output Y;
+wire [4:1]W;
+and g1(W[1],(~S[1]),(~S[0]),I[0]);
+and g2(W[2],(~S[1]),S[0],I[1]);
+and g3(W[3],S[1],(~S[0]),I[2]);
+and g4(W[4],S[1],S[0],I[3]);
+or g5(Y,W[1],W[2],W[3],W[4]);
 endmodule
 
 ```
@@ -56,34 +53,34 @@ endmodule
 ```verilog
 // Testbench Skeleton
 `timescale 1ns/1ps
-module tb_mux4_gate;
-
-    // Declare testbench signals
-    reg I0, I1, I2, I3;
-    reg S0, S1;
-    wire Y;
-
-    // Instantiate DUT
-    mux4_gate uut (
-        .I0(I0), .I1(I1), .I2(I2), .I3(I3),
-        .S0(S0), .S1(S1),
-        .Y(Y)
-    );
-
-    initial begin
-        // Initialize inputs
-
-        // Apply test cases
-
-        // Stop simulation
-        #10 $stop;
-    end
-
+module mux_41_tb;
+reg [3:0]I;
+reg [1:0]S;
+wire Y;
+mux_41 uut(I,S,Y);
+initial
+begin
+I=4'B0001;
+S=2'b00;
+#10
+$display("Selection is %b %b , output : %b ", S[1],S[0],Y);
+S=2'b01;
+#10
+$display("Selection is %b %b , output : %b ", S[1],S[0],Y);
+S=2'b10;
+#10
+$display("Selection is %b %b , output : %b ", S[1],S[0],Y);
+S=2'b11;
+#10
+$display("Selection is %b %b , output : %b ", S[1],S[0],Y);
+$finish;
+end 
 endmodule
 ```
 ## Simulated Output Gate Level Modelling
 
-_______ Here Paste the Simulated output  ___________
+
+<img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/c59f2da2-4632-4e35-98bb-caa6841aee29" />
 
 ---
 ### 4:1 MUX Data flow Modelling
