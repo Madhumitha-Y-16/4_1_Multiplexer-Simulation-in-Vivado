@@ -191,54 +191,57 @@ endmodule
 
 
 ```verilog
-module mux2_to_1 (
-    input wire A,
-    input wire B,
-    input wire S,
-    output wire Y
-);
-    assign Y = S ? B : A;
+module MUX21(A,B,S,Z);
+input A,B,S;
+output Z;
+wire W1,W2;
+and g1(W1,A,~S);
+and g2(W2,B,S);
+or g3(Z,W1,W2);
 endmodule
 
-module mux4_to_1_structural (
-    input wire A,
-    input wire B,
-    input wire C,
-    input wire D,
-    input wire S0,
-    input wire S1,
-    output wire Y
-);
-
-
-
-
+module MUX_41(I,S,Y);
+input [3:0]I;
+input [1:0]S;
+output Y;
+wire [2:1]W;
+MUX21 M1(.Z(W[1]),.A(I[0]),.B(I[1]),.S(S[1]));
+MUX21 M2(.Z(W[2]),.A(I[2]),.B(I[3]),.S(S[1]));
+MUX21 M3(.Z(Y),.A(W[1]),.B(W[2]),.S(S[0]));
 endmodule
 ```
 ### Testbench Implementation
 ```verilog
-`timescale 1ns / 1ps
-
-module mux4_to_1_tb;
-    reg A, B, C, D, S0, S1;
-    wire Y_gate, Y_dataflow, Y_behavioral, Y_structural;
-
-    
-
-    initial begin
-        A = 0; B = 0; C = 0; D = 0; S0 = 0; S1 = 0;
-
-      
-        #10 $stop;
-    end
-
-   
-    end
+module MUX_41_tb;
+reg [3:0]I;
+reg [1:0]S;
+wire Y;
+MUX_41 uut(I,S,Y);
+initial
+begin
+I=4'B1000;
+S=2'b00;
+#10
+$display("Selection is %b %b , output : %b ", S[1],S[0],Y);
+S=2'b01;
+#10
+$display("Selection is %b %b , output : %b ", S[1],S[0],Y);
+S=2'b10;
+#10
+$display("Selection is %b %b , output : %b ", S[1],S[0],Y);
+S=2'b11;
+#10
+$display("Selection is %b %b , output : %b ", S[1],S[0],Y);
+$finish;
+end
 endmodule
+
 ```
 ## Simulated Output Structural Modelling
 
-_______ Here Paste the Simulated output  ___________
+<img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/b1fe824b-803d-4e9c-afa2-754620b4eaef" />
+
+
 
 ---
 ### CONCLUSION
