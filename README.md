@@ -1,5 +1,3 @@
-# SIMULATION AND IMPLEMENTATION OF 4:1 MULTIPLEXER
-
 ## AIM
 To design and simulate a 4:1 Multiplexer (MUX) using Verilog HDL in four different modeling styles—Gate-Level, Data Flow, Behavioral, and Structural—and to verify its functionality through a testbench using the Vivado 2023.1 simulation environment. The experiment aims to understand how different abstraction levels in Verilog can be used to describe the same digital logic circuit and analyze their performance.
 
@@ -86,30 +84,32 @@ endmodule
 ### 4:1 MUX Data flow Modelling
 ```verilog
 // Dataflow Modelling - Skeleton
-module mux_41(I,S,Y);
+`timescale 1ns / 1ps
+module mux41(I,S,Y);
 input [3:0]I;
 input[1:0]S;
 output Y;
 wire [4:1]W;
-assign W[1]= I[0] & (~S[1]) & (~S[0]);
-assign W[2]= I[0] & (~S[1]) & S[0];
-assign W[3]= I[0] & S[1] & (~S[0]);
-assign W[4]= I[0] & S[1] & S[0];
-assign Y= W[1] | W[2] | W[3] | W[4];
+assign W[1]=(~S[0])&(~S[1])&I[0];
+assign W[2]=(~S[0])&S[1]&I[1];
+assign W[3]=S[0]&(~S[1])&I[2];
+assign W[4]=S[0]&S[1]&I[3];
+assign Y=W[1]|W[2]|W[3]|W[4];
 endmodule
+
 ```
 ### 4:1 MUX Data flow Modelling- Testbench
 ```verilog
 // Testbench Skeleton
 `timescale 1ns/1ps
-module mux_41_tb;
+module mux4_1_tb;
 reg [3:0]I;
 reg [1:0]S;
 wire Y;
-mux_41 uut(I,S,Y);
+mux41 uut(I,S,Y);
 initial
 begin
-I=4'B0001;
+I=4'B0110;
 S=2'b00;
 #10
 $display("Selection is %b %b , output : %b ", S[1],S[0],Y);
@@ -123,13 +123,15 @@ S=2'b11;
 #10
 $display("Selection is %b %b , output : %b ", S[1],S[0],Y);
 $finish;
-end 
+end
 endmodule
 ```
 ## Simulated Output Dataflow Modelling
 
 
-<img width="692" height="389" alt="image" src="https://github.com/user-attachments/assets/744990da-38d6-40aa-b356-91891291dd77" />
+<img width="1920" height="1080" alt="Screenshot (22)" src="https://github.com/user-attachments/assets/1386d5cc-02fa-41be-b704-583a2734c9de" />
+
+
 
 
 ---
